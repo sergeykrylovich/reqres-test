@@ -15,4 +15,12 @@ public class DataForTests {
             );
 
     }
+    static Stream<Arguments> negativeDataForMethodSource() {
+        return Stream.of(
+                Arguments.of(-2,12),
+                Arguments.of(-1,0),
+                Arguments.of(-2,6)
+            );
+
+    }
 }

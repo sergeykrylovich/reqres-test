@@ -1,5 +1,6 @@
 plugins {
     id 'java-library'
+    id 'io.qameta.allure' version '2.10.0'
     id 'io.freefair.lombok' version '8.2.2'
 }
 
@@ -9,10 +10,25 @@ version = '1.0-SNAPSHOT'
 def restAssuredVersion = "5.3.0",
     assertJVersion = "3.24.2",
     slf4jVersion = "1.7.32",
-    hamcrestVersion = "2.2"
+    hamcrestVersion = "2.2",
+    allureVersion = "2.19.0"
 
 repositories {
     mavenCentral()
+}
+
+allure {
+    report {
+        version.set(allureVersion)
+    }
+    adapter {
+        aspectjWeaver.set(true)
+        frameworks {
+            junit5 {
+                adapterVersion.set(allureVersion)
+            }
+        }
+    }
 }
 
 dependencies {
@@ -22,7 +38,8 @@ dependencies {
             "io.rest-assured:rest-assured:$restAssuredVersion",
             "org.assertj:assertj-core:3.24.2",
             "org.slf4j:slf4j-simple:$slf4jVersion",
-            "org.hamcrest:hamcrest:2.1"
+            "org.hamcrest:hamcrest:2.1",
+            "io.qameta.allure:allure-rest-assured:$allureVersion"
     )
 }
 

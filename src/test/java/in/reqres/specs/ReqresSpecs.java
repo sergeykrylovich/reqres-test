@@ -7,6 +7,7 @@ import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import org.hamcrest.Matcher;
 
+import static in.reqres.helpers.CustomAllureListener.withCustomTemplates;
 import static org.hamcrest.Matchers.notNullValue;
 
 public class ReqresSpecs {
@@ -16,6 +17,7 @@ public class ReqresSpecs {
                 .setBaseUri("https://reqres.in")
                 .setBasePath("/api")
                 .setContentType(ContentType.JSON)
+                .addFilter(withCustomTemplates())
                 .build();
     }
 
