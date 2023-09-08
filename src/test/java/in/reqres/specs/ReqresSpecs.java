@@ -5,18 +5,21 @@ import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
-import org.hamcrest.Matcher;
+
+import java.nio.charset.Charset;
 
 import static in.reqres.helpers.CustomAllureListener.withCustomTemplates;
 import static org.hamcrest.Matchers.notNullValue;
 
 public class ReqresSpecs {
 
+    private static final String BASEURL = "https://reqres.in";
+
     public static RequestSpecification requestSpecification() {
         return new RequestSpecBuilder()
-                .setBaseUri("https://reqres.in")
+                .setBaseUri(BASEURL)
                 .setBasePath("/api")
-                .setContentType(ContentType.JSON)
+                .setContentType("application/json; charset=UTF-8")
                 .addFilter(withCustomTemplates())
                 .build();
     }
@@ -25,7 +28,7 @@ public class ReqresSpecs {
         return new ResponseSpecBuilder()
                 .expectStatusCode(200)
                 .expectBody(notNullValue())
-                .expectContentType(ContentType.JSON)
+                .expectContentType("application/json; charset=UTF-8")
                 .build();
     }
 

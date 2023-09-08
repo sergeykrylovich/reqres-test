@@ -29,8 +29,9 @@ public class TestListUsers {
     @Description("Request list of users with positive data")
     public void getListOfUsersPositiveTest(int page, int perPage) {
         List<ListUsersPojo> listOfUsers = given(ReqresSpecs.requestSpecification())
+                .queryParams("page", page, "per_page", perPage)
                 .when()
-                .get(String.format("/users?page=%d&per_page=%d", page, perPage))
+                .get("/users")
                 .then()
                 .log().all()
                 .spec(ReqresSpecs.responseSpecification())
@@ -46,8 +47,9 @@ public class TestListUsers {
     @ParameterizedTest(name = "Negative test of list users")
     public void getListOfUsersNegativeTest(int page, int perPage) {
         List<ListUsersPojo> listOfUsers = given(ReqresSpecs.requestSpecification())
+                .queryParams("page", page, "per_page", perPage)
                 .when()
-                .get(String.format("/users?page=%d&per_page=%d", page, perPage))
+                .get("/users")
                 .then()
                 .log().all()
                 .spec(ReqresSpecs.responseSpecification())
