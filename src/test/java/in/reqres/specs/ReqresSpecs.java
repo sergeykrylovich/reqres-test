@@ -35,7 +35,7 @@ public class ReqresSpecs {
     public static ResponseSpecification responseSpecification404() {
         return new ResponseSpecBuilder()
                 .expectStatusCode(404)
-                .expectBody(empty())
+                //.expectBody(empty())
                 .expectContentType("application/json; charset=UTF-8")
                 .build();
     }

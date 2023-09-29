@@ -1,5 +1,6 @@
 package in.reqres.tests;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import in.reqres.pojo.ListUsersPojo;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
@@ -9,21 +10,23 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static in.reqres.specs.ReqresSpecs.*;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.*;
 
 @Epic("Test list of users API")
-public class GetUsersTest {
+public class UsersTest {
 
 
     //@CsvFileSource(resources = "/ListUsersData.csv")
     @Tag("PositiveTest")
     @MethodSource(value = "in.reqres.tests.test_data.DataForTests#positiveDataForMethodSource")
-    @ParameterizedTest(name = "Positive test of list users")
-    @Description("Request list of users with page:{page} and per page: {perPage} with positive data")
+    @ParameterizedTest(name = "with page: {0}, perpage: {1}")
+    @Description("Request list of users with positive data")
     public void getListOfUsersPositiveTest(int page, int perPage) {
         List<ListUsersPojo> listOfUsers = given(requestSpecification())
                 .queryParams("page", page, "per_page", perPage)
@@ -41,7 +44,8 @@ public class GetUsersTest {
     @Issue("Jira-1")
     @Tag("NegativeTest")
     @MethodSource(value = "in.reqres.tests.test_data.DataForTests#negativeDataForMethodSource")
-    @ParameterizedTest(name = "Negative test of list users with page: {page} and per page: {perPage}")
+    @ParameterizedTest(name = "with page: {0}, perpage: {1}")
+    @Description("Request single userId of users with negative data")
     public void getListOfUsersNegativeTest(int page, int perPage) {
         List<ListUsersPojo> listOfUsers = given(requestSpecification())
                 .queryParams("page", page, "per_page", perPage)
@@ -57,7 +61,7 @@ public class GetUsersTest {
 
     @Tag("PositiveTest")
     @ValueSource(ints = {1, 2, 11, 12})
-    @ParameterizedTest(name = "Positive test for request single user {userId}")
+    @ParameterizedTest(name = "by userid: {0}")
     @Description("Request single userId of users with positive data")
     public void getSingleUserPositiveTest(int userId) {
         ListUsersPojo singleUser = given(requestSpecification())
@@ -73,7 +77,7 @@ public class GetUsersTest {
     }
     @Tag("NegativeTest")
     @ValueSource(ints = {-1, 0, 13})
-    @ParameterizedTest(name = "Negative test for request single user {userId}")
+    @ParameterizedTest(name = "by userid: {0}")
     @Description("Request single userId of users with negative data")
     public void getSingleUserNegativeTest(int userId) {
         ListUsersPojo singleUser = given(requestSpecification())
@@ -85,6 +89,27 @@ public class GetUsersTest {
                 .extract().jsonPath().getObject("data", ListUsersPojo.class);
 
     }
+    @Tag("PositiveTest")
+    @ValueSource(ints = {500})
+    @ParameterizedTest(name = " update userid: {0}")
+    @Description("Update user")
+    public void putSingleUsersPositiveTest(int userId) {
+        Map<String, String> newmap = new HashMap<>();
+        newmap.put("name","morpheus");
+        newmap.put("job","zion resident");
+
+         given(requestSpecification())
+                 .body(newmap)
+                .when()
+                .put("/users/500")
+                .then()
+                .log().body()
+                .spec(responseSpecification());
+                //.extract().jsonPath().getList("data", ListUsersPojo.class);
+
+
+    }
+
 
 
 
