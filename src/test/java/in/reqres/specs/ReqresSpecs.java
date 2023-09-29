@@ -9,6 +9,7 @@ import io.restassured.specification.ResponseSpecification;
 import java.nio.charset.Charset;
 
 import static in.reqres.helpers.CustomAllureListener.withCustomTemplates;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.notNullValue;
 
 public class ReqresSpecs {
@@ -19,7 +20,7 @@ public class ReqresSpecs {
         return new RequestSpecBuilder()
                 .setBaseUri(BASEURL)
                 .setBasePath("/api")
-                .setContentType("application/json; charset=UTF-8")
+                .setAccept("application/json; charset=UTF-8")
                 .addFilter(withCustomTemplates())
                 .build();
     }
@@ -28,6 +29,13 @@ public class ReqresSpecs {
         return new ResponseSpecBuilder()
                 .expectStatusCode(200)
                 .expectBody(notNullValue())
+                .expectContentType("application/json; charset=UTF-8")
+                .build();
+    }
+    public static ResponseSpecification responseSpecification404() {
+        return new ResponseSpecBuilder()
+                .expectStatusCode(404)
+                .expectBody(empty())
                 .expectContentType("application/json; charset=UTF-8")
                 .build();
     }
