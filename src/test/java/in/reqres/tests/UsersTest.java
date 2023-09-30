@@ -1,22 +1,29 @@
 package in.reqres.tests;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
+
 import in.reqres.pojo.ListUsersPojo;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Issue;
+import io.restassured.path.json.JsonPath;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import static in.reqres.specs.ReqresSpecs.*;
 import static io.restassured.RestAssured.given;
+import static java.time.format.DateTimeFormatter.ISO_INSTANT;
 import static org.assertj.core.api.Assertions.*;
+import static org.hamcrest.Matchers.equalTo;
 
 @Epic("Test list of users API")
 public class UsersTest {
@@ -90,22 +97,31 @@ public class UsersTest {
 
     }
     @Tag("PositiveTest")
-    @ValueSource(ints = {500})
-    @ParameterizedTest(name = " update userid: {0}")
+    @MethodSource(value = "in.reqres.tests.test_data.DataForTests#positiveDataForPutSingleUser")
+    @ParameterizedTest(name = " update userid: {0} with name: {1} and job: {2}")
     @Description("Update user")
-    public void putSingleUsersPositiveTest(int userId) {
+    public void putSingleUsersPositiveTest(int userId, String name, String job) {
         Map<String, String> newmap = new HashMap<>();
-        newmap.put("name","morpheus");
-        newmap.put("job","zion resident");
+        newmap.put("name",name);
+        newmap.put("job",job);
 
-         given(requestSpecification())
-                 .body(newmap)
+        JsonPath jsonPath = given(requestSpecification())
+                .body(newmap)
                 .when()
+                //.log().all()
                 .put("/users/500")
                 .then()
                 .log().body()
-                .spec(responseSpecification());
-                //.extract().jsonPath().getList("data", ListUsersPojo.class);
+                .spec(responseSpecification())
+                .body("name", equalTo(name))
+                .body("job", equalTo(job))
+                .extract().body().jsonPath();
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.getDefault());
+        LocalDateTime date = LocalDateTime.parse(jsonPath.get("updatedAt"), dateTimeFormatter);
+        assertThat(date.getHour()).isEqualTo((LocalDateTime.now(ZoneOffset.UTC).getHour()));
+        assertThat(date.getMinute()).isEqualTo((LocalDateTime.now(ZoneOffset.UTC).getMinute()));
+
 
 
     }

@@ -23,4 +23,12 @@ public class DataForTests {
             );
 
     }
+    static Stream<Arguments> positiveDataForPutSingleUser() {
+        return Stream.of(
+                Arguments.of(500, "morpheus", "zion resident"),
+                Arguments.of(501, "Neo", "Fight master"),
+                Arguments.of(700, "Trinity", "What a woman")
+            );
+
+    }
 }

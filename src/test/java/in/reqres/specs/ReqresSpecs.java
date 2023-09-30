@@ -20,7 +20,7 @@ public class ReqresSpecs {
         return new RequestSpecBuilder()
                 .setBaseUri(BASEURL)
                 .setBasePath("/api")
-                .setAccept("application/json; charset=UTF-8")
+                .setContentType("application/json; charset=UTF-8")
                 .addFilter(withCustomTemplates())
                 .build();
     }
