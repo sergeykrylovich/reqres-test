@@ -5,28 +5,19 @@ import in.reqres.pojo.ListUsersPojo;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Issue;
-import io.restassured.path.json.JsonPath;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 import static in.reqres.specs.ReqresSpecs.*;
 import static io.restassured.RestAssured.given;
-import static java.time.format.DateTimeFormatter.ISO_INSTANT;
 import static org.assertj.core.api.Assertions.*;
-import static org.hamcrest.Matchers.equalTo;
 
 @Epic("Test list of users API")
-public class UsersTest {
+public class RetrieveUsersTest {
 
 
     //@CsvFileSource(resources = "/ListUsersData.csv")
@@ -41,7 +32,7 @@ public class UsersTest {
                 .get("/users")
                 .then()
                 .log().all()
-                .spec(responseSpecification())
+                .spec(responseSpecification200())
                 .extract().jsonPath().getList("data", ListUsersPojo.class);
 
         assertThat(listOfUsers.size()).isEqualTo(perPage);
@@ -60,7 +51,7 @@ public class UsersTest {
                 .get("/users")
                 .then()
                 .log().all()
-                .spec(responseSpecification())
+                .spec(responseSpecification200())
                 .extract().jsonPath().getList("data", ListUsersPojo.class);
 
         assertThat(listOfUsers.size()).isEqualTo(0);
@@ -76,7 +67,7 @@ public class UsersTest {
                 .get("/users/" + userId)
                 .then()
                 .log().all()
-                .spec(responseSpecification())
+                .spec(responseSpecification200())
                 .extract().jsonPath().getObject("data", ListUsersPojo.class);
 
         assertThat(singleUser.getId()).isEqualTo(userId);
@@ -96,37 +87,6 @@ public class UsersTest {
                 .extract().jsonPath().getObject("data", ListUsersPojo.class);
 
     }
-    @Tag("PositiveTest")
-    @MethodSource(value = "in.reqres.tests.test_data.DataForTests#positiveDataForPutSingleUser")
-    @ParameterizedTest(name = " update userid: {0} with name: {1} and job: {2}")
-    @Description("Update user")
-    public void putSingleUsersPositiveTest(int userId, String name, String job) {
-        Map<String, String> newmap = new HashMap<>();
-        newmap.put("name",name);
-        newmap.put("job",job);
-
-        JsonPath jsonPath = given(requestSpecification())
-                .body(newmap)
-                .when()
-                //.log().all()
-                .put("/users/500")
-                .then()
-                .log().body()
-                .spec(responseSpecification())
-                .body("name", equalTo(name))
-                .body("job", equalTo(job))
-                .extract().body().jsonPath();
-
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.getDefault());
-        LocalDateTime date = LocalDateTime.parse(jsonPath.get("updatedAt"), dateTimeFormatter);
-        assertThat(date.getHour()).isEqualTo((LocalDateTime.now(ZoneOffset.UTC).getHour()));
-        assertThat(date.getMinute()).isEqualTo((LocalDateTime.now(ZoneOffset.UTC).getMinute()));
-
-
-
-    }
-
-
 
 
 }

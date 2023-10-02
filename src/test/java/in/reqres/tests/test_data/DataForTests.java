@@ -23,11 +23,19 @@ public class DataForTests {
             );
 
     }
-    static Stream<Arguments> positiveDataForPutSingleUser() {
+    static Stream<Arguments> positiveDataForUpdateSingleUser() {
         return Stream.of(
                 Arguments.of(500, "morpheus", "zion resident"),
                 Arguments.of(501, "Neo", "Fight master"),
                 Arguments.of(700, "Trinity", "What a woman")
+            );
+
+    }
+    static Stream<Arguments> positiveDataForCreateSingleUser() {
+        return Stream.of(
+                Arguments.of( "morpheus", "zion resident"),
+                Arguments.of( "Neo", "Fight master"),
+                Arguments.of("Trinity", "What a woman")
             );
 
     }
