@@ -29,9 +29,9 @@ public class UpdateUsersTests {
 
 
     @Tag("PositiveTest")
-    @DisplayName(value = "put single user")
+    @DisplayName(value = "Update user with method PUT")
     @MethodSource(value = "in.reqres.tests.test_data.DataForTests#positiveDataForUpdateSingleUser")
-    @ParameterizedTest(name = " update userid: {0} with name: {1} and job: {2}")
+    @ParameterizedTest(name = "using userid: {0}, name: {1} and job: {2}")
     @Description("Update user")
     public void putSingleUserPositiveTest(int userId, String name, String job) {
         installSpecification(requestSpecification(), responseSpecification200());
@@ -58,7 +58,8 @@ public class UpdateUsersTests {
 
     @Tag("PositiveTest")
     @MethodSource(value = "in.reqres.tests.test_data.DataForTests#positiveDataForUpdateSingleUser")
-    @ParameterizedTest(name = " update userid: {0} with name: {1} and job: {2}")
+    @DisplayName(value = "Update user with method PATCH")
+    @ParameterizedTest(name = "using userid: {0}, name: {1} and job: {2}")
     @Description("Update user")
     public void patchSingleUserPositiveTest(int userId, String name, String job) {
         installSpecification(requestSpecification(), responseSpecification200());
@@ -86,7 +87,8 @@ public class UpdateUsersTests {
 
     @Tag("PositiveTest")
     @MethodSource(value = "in.reqres.tests.test_data.DataForTests#positiveDataForCreateSingleUser")
-    @ParameterizedTest(name = " create with name: {0} and job: {1}")
+    @DisplayName(value = "Create user with method POST")
+    @ParameterizedTest(name = "using name: {0} and job: {1}")
     @Description("Update user")
     public void createSingleUserPositiveTest(String name, String job) {
         installSpecification(requestSpecification(), responseSpecification201());
@@ -115,7 +117,8 @@ public class UpdateUsersTests {
 
     @Tag("PositiveTest")
     @ValueSource(ints = {2,3})
-    @ParameterizedTest(name = "Delete user with userid: {0}")
+    @DisplayName(value = "Delete user with method DELETE")
+    @ParameterizedTest(name = "using userid: {0}")
     @Description("Delete user")
     public void deleteSingleUserPositiveTest(int userId) {
         installSpecification(requestSpecification(), responseSpecification204());
