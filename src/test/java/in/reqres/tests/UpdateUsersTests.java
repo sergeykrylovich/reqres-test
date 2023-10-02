@@ -1,8 +1,12 @@
 package in.reqres.tests;
 
+import io.qameta.allure.Allure;
 import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
 import io.restassured.path.json.JsonPath;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -20,9 +24,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
+@Epic("Test list of users API update")
 public class UpdateUsersTests {
 
+
     @Tag("PositiveTest")
+    @DisplayName(value = "put single user")
     @MethodSource(value = "in.reqres.tests.test_data.DataForTests#positiveDataForUpdateSingleUser")
     @ParameterizedTest(name = " update userid: {0} with name: {1} and job: {2}")
     @Description("Update user")
@@ -78,8 +85,8 @@ public class UpdateUsersTests {
     }
 
     @Tag("PositiveTest")
-    @MethodSource(value = "in.reqres.tests.test_data.DataForTests#positiveDataForUpdateSingleUser")
-    @ParameterizedTest(name = " update userid: {0} with name: {1} and job: {2}")
+    @MethodSource(value = "in.reqres.tests.test_data.DataForTests#positiveDataForCreateSingleUser")
+    @ParameterizedTest(name = " create with name: {0} and job: {1}")
     @Description("Update user")
     public void createSingleUserPositiveTest(String name, String job) {
         installSpecification(requestSpecification(), responseSpecification201());
@@ -115,11 +122,18 @@ public class UpdateUsersTests {
 
         given()
                 .when()
-                .log().all()
+                //.log().all()
                 .delete("/users/" + userId)
                 .then()
                 .log().body();
 
+    }
+
+    @Test
+    @DisplayName(value = "Expected test")
+    public void datTest() {
+        int i = 2;
+        assertThat(i).isEqualTo(2);
     }
 
 }
