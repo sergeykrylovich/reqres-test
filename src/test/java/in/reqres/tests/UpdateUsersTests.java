@@ -132,11 +132,5 @@ public class UpdateUsersTests {
 
     }
 
-    @Test
-    @DisplayName(value = "Expected test")
-    public void datTest() {
-        int i = 2;
-        assertThat(i).isEqualTo(2);
-    }
 
 }
