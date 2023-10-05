@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-@Epic("Test list of users API update")
+@Epic("Reqres API tests - update users")
 public class UpdateUsersTests {
 
 
