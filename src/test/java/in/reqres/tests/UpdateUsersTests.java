@@ -35,12 +35,12 @@ public class UpdateUsersTests {
     @Description("Update user")
     public void putSingleUserPositiveTest(int userId, String name, String job) {
         installSpecification(requestSpecification(), responseSpecification200());
-        Map<String, String> newmap = new HashMap<>();
-        newmap.put("name",name);
-        newmap.put("job",job);
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("name",name);
+        requestBody.put("job",job);
 
         JsonPath jsonPath = given()
-                .body(newmap)
+                .body(requestBody)
                 .when()
                 //.log().all()
                 .put("/users/" + userId)
@@ -50,6 +50,7 @@ public class UpdateUsersTests {
                 .body("job", equalTo(job))
                 .extract().body().jsonPath();
 
+        //asserting date creation with current date of UTC locale
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.getDefault());
         LocalDateTime date = LocalDateTime.parse(jsonPath.get("updatedAt"), dateTimeFormatter);
         assertThat(date.getHour()).isEqualTo((LocalDateTime.now(ZoneOffset.UTC).getHour()));
@@ -64,12 +65,12 @@ public class UpdateUsersTests {
     public void patchSingleUserPositiveTest(int userId, String name, String job) {
         installSpecification(requestSpecification(), responseSpecification200());
 
-        Map<String, String> newmap = new HashMap<>();
-        newmap.put("name",name);
-        newmap.put("job",job);
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("name",name);
+        requestBody.put("job",job);
 
         JsonPath jsonPath = given()
-                .body(newmap)
+                .body(requestBody)
                 .when()
                 //.log().all()
                 .patch("/users/" + userId)
@@ -93,12 +94,12 @@ public class UpdateUsersTests {
     public void createSingleUserPositiveTest(String name, String job) {
         installSpecification(requestSpecification(), responseSpecification201());
 
-        Map<String, String> newmap = new HashMap<>();
-        newmap.put("name",name);
-        newmap.put("job",job);
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("name",name);
+        requestBody.put("job",job);
 
         JsonPath jsonPath = given()
-                .body(newmap)
+                .body(requestBody)
                 .when()
                 //.log().all()
                 .post("/users")
