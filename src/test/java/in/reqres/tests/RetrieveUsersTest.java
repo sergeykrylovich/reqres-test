@@ -1,6 +1,7 @@
 package in.reqres.tests;
 
 
+import in.reqres.helpers.RequestAPI;
 import in.reqres.pojo.ListUsersPojo;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
@@ -20,7 +21,7 @@ import static org.assertj.core.api.Assertions.*;
 @Epic("Reqres API tests - get users")
 public class RetrieveUsersTest {
 
-
+    RequestAPI requestAPI = new RequestAPI();
     //@CsvFileSource(resources = "/ListUsersData.csv")
     @Tag("PositiveTest")
     @MethodSource(value = "in.reqres.tests.test_data.DataForTests#positiveDataForMethodSource")
@@ -28,15 +29,9 @@ public class RetrieveUsersTest {
     @ParameterizedTest(name = "using page: {0}, perpage: {1}")
     @Description("Request list of users with positive data")
     public void getListOfUsersPositiveTest(int page, int perPage) {
-        installSpecification(requestSpecification(), responseSpecification200());
 
-        List<ListUsersPojo> listOfUsers = given()
-                .queryParams("page", page, "per_page", perPage)
-                .when()
-                .get("/users")
-                .then()
-                .log().all()
-                .extract().jsonPath().getList("data", ListUsersPojo.class);
+
+        List<ListUsersPojo> listOfUsers = requestAPI.getListOfUsers(page, perPage);
 
         assertThat(listOfUsers.size()).isEqualTo(perPage);
         assertThat(listOfUsers.get(perPage - 1).getId()).isEqualTo(perPage * page);
@@ -49,15 +44,9 @@ public class RetrieveUsersTest {
     @ParameterizedTest(name = "using page: {0}, perpage: {1}")
     @Description("Request list of users with negative data")
     public void getListOfUsersNegativeTest(int page, int perPage) {
-        installSpecification(requestSpecification(), responseSpecification200());
 
-        List<ListUsersPojo> listOfUsers = given()
-                .queryParams("page", page, "per_page", perPage)
-                .when()
-                .get("/users")
-                .then()
-                .log().all()
-                .extract().jsonPath().getList("data", ListUsersPojo.class);
+
+        List<ListUsersPojo> listOfUsers = requestAPI.getListOfUsers(page, perPage);
 
         assertThat(listOfUsers.size()).isEqualTo(0);
     }
@@ -68,32 +57,22 @@ public class RetrieveUsersTest {
     @ParameterizedTest(name = "using userid: {0}")
     @Description("Request single user with positive data")
     public void getSingleUserPositiveTest(int userId) {
-        installSpecification(requestSpecification(), responseSpecification200());
 
-        ListUsersPojo singleUser = given()
-                .when()
-                .get("/users/" + userId)
-                .then()
-                .log().all()
-                .extract().jsonPath().getObject("data", ListUsersPojo.class);
+        ListUsersPojo singleUser = requestAPI.getSingleUser(userId, responseSpecification200());
 
         assertThat(singleUser.getId()).isEqualTo(userId);
         assertThat(singleUser.getAvatar()).contains(userId + "-image");
+
     }
+
     @Tag("NegativeTest")
     @ValueSource(ints = {-1, 0, 13})
     @DisplayName(value = "Get single user with method GET")
     @ParameterizedTest(name = "using userid: {0}")
     @Description("Request single user with negative data")
     public void getSingleUserNegativeTest(int userId) {
-        installSpecification(requestSpecification(), responseSpecification404());
 
-        ListUsersPojo singleUser = given()
-                .when()
-                .get("/users/" + userId)
-                .then()
-                .log().all()
-                .extract().jsonPath().getObject("data", ListUsersPojo.class);
+        ListUsersPojo singleUser = requestAPI.getSingleUser(userId, responseSpecification404());
 
     }
 
